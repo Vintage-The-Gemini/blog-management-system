@@ -37,7 +37,9 @@ export default defineConfig(({ command }) => ({
     cors: true,
     proxy: {
       '/api': {
-        target: command === 'serve' ? 'http://localhost:5000' : '',
+        target: command === 'serve' 
+          ? 'http://localhost:5000' 
+          : 'http://localhost:5000',
         changeOrigin: true,
         secure: false,
       },
