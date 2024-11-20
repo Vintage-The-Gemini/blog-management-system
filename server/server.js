@@ -19,7 +19,7 @@ app.use(express.json());
 // Configure multer for file upload
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/');
+    cb(null, 'uploads/');  // Render will handle this directory
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -41,14 +41,8 @@ const upload = multer({
   }
 });
 
-// Create uploads directory if it doesn't exist
-const fs = require('fs');
-if (!fs.existsSync('uploads')) {
-  fs.mkdirSync('uploads');
-}
-
-// Serve static files from uploads directory
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Serve uploads directory
+app.use('/uploads', express.static('uploads'));
 
 // API Routes
 app.use("/api/posts", postRoutes);
@@ -73,23 +67,21 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
   }
 });
 
-// Serve static files from the React app in production
-app.use(express.static(path.join(__dirname, '../client/dist')));
+// Serve static files from React app
+app.use(express.static(path.join(__dirname, '../client')));
 
 // Handle React routing, return all requests to React app
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
+  res.sendFile(path.join(__dirname, '../client/index.html'));
 });
 
-// MongoDB connection with enhanced error logging
+// MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log("MongoDB connected successfully");
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   })
   .catch((err) => {
-    console.error("MongoDB connection error:");
-    console.error("Error name:", err.name);
-    console.error("Error message:", err.message);
+    console.error("MongoDB connection error:", err);
     process.exit(1);
   });
