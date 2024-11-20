@@ -9,16 +9,14 @@ const __dirname = path.dirname(__filename)
 export default defineConfig({
   plugins: [react()],
   build: {
-    outDir: './',
-    emptyOutDir: false,
+    outDir: 'dist',
+    assetsDir: 'assets',
+    sourcemap: false,
     rollupOptions: {
-      input: {
-        main: path.resolve(__dirname, 'index.html'),
-      },
       output: {
-        entryFileNames: 'assets/[name].[hash].js',
-        chunkFileNames: 'assets/[name].[hash].js',
-        assetFileNames: 'assets/[name].[hash].[ext]'
+        manualChunks: {
+          vendor: ['react', 'react-router-dom', 'react-dom', 'axios'],
+        },
       },
     },
   },
@@ -26,11 +24,9 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
-    extensions: ['.js', '.jsx', '.ts', '.tsx']
   },
   server: {
     port: 3000,
-    cors: true,
     proxy: {
       '/api': {
         target: 'http://localhost:5000',

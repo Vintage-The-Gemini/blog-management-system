@@ -67,13 +67,12 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
   }
 });
 
-// Serve static files from React app
-app.use(express.static(path.join(__dirname, '../client')));
-app.use(express.static(path.join(__dirname, '../client/assets')));
+// Serve static files from React build
+app.use(express.static(path.join(__dirname, '../client/dist')));
 
 // Handle React routing, return all requests to React app
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/index.html'));
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 
 // MongoDB connection
