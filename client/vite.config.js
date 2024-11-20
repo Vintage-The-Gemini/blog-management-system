@@ -1,18 +1,21 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { fileURLToPath } from 'url'
 import path from 'path'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 export default defineConfig({
   plugins: [react()],
   build: {
     outDir: 'dist',
     sourcemap: false,
-    minify: 'terser',
-    chunkSizeWarningLimit: 1600,
+    minify: true,
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-router-dom', 'react-dom'],
+          vendor: ['react', 'react-router-dom', 'react-dom', 'axios'],
         },
       },
     },
@@ -24,7 +27,6 @@ export default defineConfig({
   },
   server: {
     port: 3000,
-    open: true,
     cors: true,
     proxy: {
       '/api': {
@@ -33,8 +35,5 @@ export default defineConfig({
         secure: false,
       },
     },
-  },
-  preview: {
-    port: 3000,
-  },
+  }
 })
