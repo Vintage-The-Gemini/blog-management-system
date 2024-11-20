@@ -19,7 +19,7 @@ app.use(express.json());
 // Configure multer for file upload
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/');  // Render will handle this directory
+    cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -69,6 +69,7 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
 
 // Serve static files from React app
 app.use(express.static(path.join(__dirname, '../client')));
+app.use(express.static(path.join(__dirname, '../client/assets')));
 
 // Handle React routing, return all requests to React app
 app.get('*', (req, res) => {
